@@ -24,9 +24,77 @@ To Implement ELGAMAL ALGORITHM
 6. Security: The security of the ElGamal algorithm relies on the difficulty of solving the discrete logarithm problem in a large prime field, making it secure for encryption.
 
 ## Program:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+// Function to perform modular exponentiation (a^b mod p)
+long long mod_exp(long long base, long long exp, long long mod) {
+    long long result = 1;
+    base = base % mod;
+    while (exp > 0) {
+        if (exp % 2 == 1) {
+            result = (result * base) % mod;
+        }
+        exp = exp >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
+}
+
+// Function to calculate the modular multiplicative inverse using Fermat's Little Theorem
+long long mod_inverse(long long a, long long p) {
+    return mod_exp(a, p - 2, p);
+}
+
+int main() {
+    long long p, g, x, y, k, c1, c2, decrypted, message;
+
+    // Input prime number and primitive root
+    printf("Enter a prime number (p): ");
+    scanf("%lld", &p);
+
+    printf("Enter a primitive root (g): ");
+    scanf("%lld", &g);
+
+    // Private key
+    printf("Enter the private key (x): ");
+    scanf("%lld", &x);
+
+    // Public key calculation
+    y = mod_exp(g, x, p);
+    printf("Public key (y) is: %lld\n", y);
+
+    // Input the message to be encrypted
+    printf("Enter the message to encrypt (integer): ");
+    scanf("%lld", &message);
+
+    // Random encryption key
+    printf("Enter a random encryption key (k): ");
+    scanf("%lld", &k);
+
+    // Encryption process
+    c1 = mod_exp(g, k, p);
+    c2 = (message * mod_exp(y, k, p)) % p;
+
+    printf("\nEncrypted values:\n");
+    printf("c1: %lld\n", c1);
+    printf("c2: %lld\n", c2);
+
+    // Decryption process
+    long long c1_inverse = mod_exp(c1, p - 1 - x, p); // Using (c1^x)^(-1) mod p
+    decrypted = (c2 * c1_inverse) % p;
+
+    printf("\nDecrypted message: %lld\n", decrypted);
+
+    return 0;
+}
+```
 
 
 ## Output:
+![Screenshot 2024-11-11 101631](https://github.com/user-attachments/assets/de55c4a8-c55b-48a9-8c36-d23f4ffd5351)
 
 
 ## Result:
